@@ -81,11 +81,14 @@ func mepHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// configuration
-	tokenSlack = os.Args[1]
-	runtimePath = os.Args[2]
+	httpPort := os.Args[1]
+	tokenSlack = os.Args[2]
+	runtimePath = os.Args[3]
+
+	log.Println("Port used : " + httpPort)
 
 	// run web server
 	http.HandleFunc("/mep", mepHandler)
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":"+httpPort, nil)
 }
