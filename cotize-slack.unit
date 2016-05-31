@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=root
-ExecStart=/path/to/cotize-slack 8080 <tocket> </path/to/cotize>
+ExecStart=/path/to/cotize-slack {{port}} {{token}} {{cotize_path}}
 
 [Install]
 WantedBy=multi-user.target

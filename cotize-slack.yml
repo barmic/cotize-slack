@@ -1,0 +1,30 @@
+---
+- hosts: cotize
+  vars:
+    subdomain: cotize-slack
+    domain: barmic.eu
+    cotize_path: /opt/cotize
+    proxy_port: 5001
+    become_method: su
+    php: no
+  tasks:
+  - name: Upload slack-cotize
+    copy: src=slack-cotize dest=/opt/cotize
+    become: true
+  - file: path=/opt/cotize state=directory
+    become: true
+  - name: Install subdomain configuration
+    template: src=nginx-subdomain.conf.j2 dest=/etc/nginx/sites-available/{{ subdomain }} owner=www-data group=www-data
+    become: true
+  - name: Init configuration
+    template: src=cotize-slack.unit dest=/etc/systemd/system/{{ subdomain }}.service
+    become: true
+  - name: Active cotize deamon
+    command: systemctl enable {{ subdomain }}.service
+    become: true
+  - name: Run cotize-slack deamon
+    service: name={{ subdomain }} state=restart
+    become: true
+  - name: Restart nginx
+    service: name=nginx state=restart
+    become: true
